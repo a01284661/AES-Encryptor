@@ -35,7 +35,7 @@ def browse_file():
 
 
 def encrypt():
-    encoded_key = derive_key(key.get().encode(), b'prueba')
+    encoded_key = derive_key(key.get().encode(), b'cripto')
     cipher = Fernet(encoded_key)
     if exists(path.get()):
         with open(path.get(), 'rb') as file:
@@ -48,7 +48,7 @@ def encrypt():
 
 
 def decrypt():
-    encoded_key = derive_key(key.get().encode(), b'prueba')
+    encoded_key = derive_key(key.get().encode(), b'cripto')
     cipher = Fernet(encoded_key)
     if exists(path.get()):
         with open(path.get(), 'rb') as file:
