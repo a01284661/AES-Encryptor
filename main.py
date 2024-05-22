@@ -11,6 +11,7 @@ import os
 from os.path import splitext
 
 
+# Funcion para derivar una llave valida AES a partir de la contraseña del usuario
 def derive_key(password, salt):
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
@@ -22,6 +23,7 @@ def derive_key(password, salt):
     return base64.urlsafe_b64encode(kdf.derive(password))
 
 
+# Funcion para seleccionar el archivo a encriptar
 def browse_file():
     filepath = filedialog.askopenfilename(
         title="Select a File",
@@ -34,33 +36,35 @@ def browse_file():
         decrypt_button.config(state='enabled')
 
 
+# Función para encriptar el archivo del usuario
 def encrypt():
-    encoded_key = derive_key(key.get().encode(), b'cripto')
-    cipher = Fernet(encoded_key)
+    encoded_key = derive_key(key.get().encode(), b'cripto') # Se deriva la llave a partir de alguna sal
+    cipher = Fernet(encoded_key) # Se crea el cipher
     if exists(path.get()):
         with open(path.get(), 'rb') as file:
-            content = file.read()
-        encrypted_content = cipher.encrypt(content)
+            content = file.read() # Se lee el archivo
+        encrypted_content = cipher.encrypt(content) # Se encripta el contenido del archivo
         file_name, file_extension = splitext(path.get())
         with open(file_name + '_encriptado' + file_extension, 'wb') as encrypted_file:
-            encrypted_file.write(encrypted_content)
+            encrypted_file.write(encrypted_content) # Se guarda el resultado en un archivo nuevo
         output_label.configure(text="Archivo encriptado")
 
 
+# Función para desencriptar el archivo del usuario
 def decrypt():
-    encoded_key = derive_key(key.get().encode(), b'cripto')
+    encoded_key = derive_key(key.get().encode(), b'cripto') # Se deriva la llave a partir de alguna sal
     cipher = Fernet(encoded_key)
     if exists(path.get()):
         with open(path.get(), 'rb') as file:
-            content = file.read()
+            content = file.read() # Se lee el archivo
         try:
-            decrypted_content = cipher.decrypt(content)
+            decrypted_content = cipher.decrypt(content) # Se desencripta el contenido del archivo
             file_name, file_extension = splitext(path.get())
             with open(file_name + '_desencriptado' + file_extension, 'wb') as decrypted_file:
-                decrypted_file.write(decrypted_content)
+                decrypted_file.write(decrypted_content) # Se guarda el resultado en un archivo nuevo
             output_label.configure(text="Archivo desencriptado")
         except InvalidToken:
-            output_label.configure(text="Error de llave")
+            output_label.configure(text="Error de llave") # Si hay algún error en la encriptación se muestra esto.
 
 
 root = Tk()
@@ -88,7 +92,6 @@ encrypt_button.grid(column=1, row=3, sticky=W)
 
 decrypt_button = ttk.Button(mainframe, text="Desencriptar", command=decrypt, state='disabled')
 decrypt_button.grid(column=2, row=3, sticky='WE')
-
 
 output = StringVar()
 output_label = ttk.Label(mainframe, text="")
