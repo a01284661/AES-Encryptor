@@ -34,6 +34,7 @@ def browse_file():
         browse_button.config(text=os.path.basename(filepath))
         encrypt_button.config(state='enabled')
         decrypt_button.config(state='enabled')
+        output_label.configure(text="")
 
 
 # Función para encriptar el archivo del usuario
@@ -47,7 +48,10 @@ def encrypt():
         file_name, file_extension = splitext(path.get())
         with open(file_name + '_encriptado' + file_extension, 'wb') as encrypted_file:
             encrypted_file.write(encrypted_content) # Se guarda el resultado en un archivo nuevo
-        output_label.configure(text="Archivo encriptado")
+        output_label.configure(text="Encriptado con Llave: " + key.get())
+        os.remove(path.get())
+        browse_button.config(text='Seleccionar Archivo')
+        key.set("")
 
 
 # Función para desencriptar el archivo del usuario
@@ -62,7 +66,10 @@ def decrypt():
             file_name, file_extension = splitext(path.get())
             with open(file_name + '_desencriptado' + file_extension, 'wb') as decrypted_file:
                 decrypted_file.write(decrypted_content) # Se guarda el resultado en un archivo nuevo
-            output_label.configure(text="Archivo desencriptado")
+            output_label.configure(text="Archivo Desencriptado")
+            os.remove(path.get())
+            browse_button.config(text='Seleccionar Archivo')
+            key.set("")
         except InvalidToken:
             output_label.configure(text="Error de llave") # Si hay algún error en la encriptación se muestra esto.
 
@@ -95,7 +102,7 @@ decrypt_button.grid(column=2, row=3, sticky='WE')
 
 output = StringVar()
 output_label = ttk.Label(mainframe, text="")
-output_label.grid(column=2, row=4, sticky=E)
+output_label.grid(column=1, row=4, columnspan=2, sticky=E)
 
 for child in mainframe.winfo_children():
     child.grid_configure(padx=5, pady=5)
