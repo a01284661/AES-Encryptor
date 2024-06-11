@@ -40,7 +40,7 @@ def browse_file():
 # Función para encriptar el archivo del usuario
 def encrypt():
     if key.get() == key2.get():
-        encoded_key = derive_key(key.get().encode(), b'cripto') # Se deriva la llave a partir de alguna sal
+        encoded_key = derive_key(key.get().encode(), b'aeaea') # Se deriva la llave a partir de alguna sal
         cipher = Fernet(encoded_key) # Se crea el cipher
         if exists(path.get()):
             with open(path.get(), 'rb') as file:
@@ -61,7 +61,7 @@ def encrypt():
 # Función para desencriptar el archivo del usuario
 def decrypt():
     if key.get() == key2.get():
-        encoded_key = derive_key(key.get().encode(), b'cripto') # Se deriva la llave a partir de alguna sal
+        encoded_key = derive_key(key.get().encode(), b'aeaea') # Se deriva la llave a partir de alguna sal
         cipher = Fernet(encoded_key)
         if exists(path.get()):
             with open(path.get(), 'rb') as file:
